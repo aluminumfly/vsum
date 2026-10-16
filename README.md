@@ -26,7 +26,7 @@ Measure-Command { Get-FileHash [file] }; Measure-Command { vsum [file] [hash] }
 
 - Choose buffer size
 - Choose algorithm
-- Generate hash only, (instead of comparing the hashes)
+- Generate hash only (instead of comparing the hashes)
 
 ## Installation
 
