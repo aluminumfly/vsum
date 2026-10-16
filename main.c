@@ -65,7 +65,6 @@ int main(int argc, char *argv[]) {
     const EVP_MD *algo = EVP_sha256();
 
     if (ctx == NULL) {
-        // debugging is important
         fprintf(stderr, "Failed to create digest context\n");
         fclose(file);
         return 1;
@@ -77,13 +76,11 @@ int main(int argc, char *argv[]) {
     unsigned char digest[EVP_MAX_MD_SIZE];
     unsigned int outlen = 0;
 
-    // beej taught me that size_t should belong here (https://beej.us/guide/bgc/html/#variable-types)
     size_t read;
 
     // init digesting status, check if 1 because C is allergic to real booleans
     int status = EVP_DigestInit_ex(ctx, algo, NULL) == 1;
 
-    // i call this the stomach (it digests)
     while (status && (read = fread(buffer, 1, sizeof buffer, file)) > 0) {
         // update status for every buffer
         status = EVP_DigestUpdate(ctx, buffer, read) == 1;
@@ -96,7 +93,6 @@ int main(int argc, char *argv[]) {
 
     // final digest action
     if (status) {
-        // what does it do with output length? i don't know, documentation doesn't explain that
         status = EVP_DigestFinal_ex(ctx, digest, &outlen) == 1;
     }
 
