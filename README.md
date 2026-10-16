@@ -49,7 +49,7 @@ You could use [Visual Studio](https://visualstudio.microsoft.com/) or [WSL](http
 pacman -S mingw-w64-ucrt-x86_64-gcc mingw-w64-x86_64-openssl
 ```
 
-3. After you've successfully installed those packages, navigate to the vsum folder you've cloned
+3. After you've successfully installed those packages, navigate to the repository you've cloned.
 MINGW64's Windows path can be a little confusing. To return to your main drive, navigate to `/c/` inside MINGW64.
 
 4. After you've successfully navigated to the repository, `cd` into `/src` and compile `main.c`:
