@@ -1,6 +1,6 @@
 # vsum
 
-`vsum` is a simple Windows utility command to validate checksums using OpenSSL. Windows does not have a native command for this, PowerShell has [`Get-FileHash`](https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash), but that doesn't quite do the job.
+`vsum` is a simple Windows utility command to validate checksums using SHA256. Windows does not have a native command for this, PowerShell has [`Get-FileHash`](https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash), but that doesn't quite do the job.
 
 ## Usage
 
@@ -13,6 +13,20 @@ For example:
 ```text
 vsum proxmox-ve_9.2-1.iso 4e88fe416df9b527624a175f24c9aa07c714d3332afb1ee3dbf3879573ef2c6c
 ```
+
+`vsum` is faster than `Get-FileHash` depending on the file size. On 1GB+ files, `vsum` is about 50% faster. Measured with
+
+```ps1
+Measure-Command { Get-FileHash [file] }; Measure-Command { vsum [file] [hash] }
+
+```
+(`vsum` can be slower on smaller files, because it has a 32KiB buffer, which is also why its faster on bigger files)
+
+### Possible future features
+
+- Choose buffer size
+- Choose algorithm
+- Generate hash only, (instead of comparing the hashes)
 
 ## Installation
 
