@@ -41,5 +41,28 @@ int main(int argc, char *argv[]) {
     // beej taught me that size_t should belong here (https://beej.us/guide/bgc/html/#variable-types)
     size_t read;
 
+    // i call this the stomach (it digests)
+    while (status && (read = fread(buffer, 1, sizeof buffer, file)) == 1) {
+        // update status for every buffer
+        status = EVP_DigestUpdate(ctx, buffer, read) == 1;
+    }
+
+    if (ferror(file)) {
+        fprintf(stderr, "File error, stop.");
+        return 1;
+    }
+
+    // final digest action
+    if (status) {
+        // what does it do with output length? i don't know, documentation doesn't explain that
+        status = EVP_DigestFinal_ex(ctx, digest, &outlen) == 1;
+    }
+
+    // release digest context and file from memory
+    EVP_MD_CTX_free(ctx);
+    fclose(file);
+
+    // recieve hex here
+
     return 0;
 }
