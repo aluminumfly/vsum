@@ -9,7 +9,7 @@ char *tohex(const unsigned char *buf, size_t len) {
     char *str = malloc(len * 2 + 1);
     if (str == NULL) {
         printf("Failed to pre-allocate string\n");
-        return 1;
+        return 0;
     }
 
     char *out = str;
@@ -77,14 +77,14 @@ int main(int argc, char *argv[]) {
     unsigned char digest[EVP_MAX_MD_SIZE];
     unsigned int outlen = 0;
 
-    size_t read;
+    size_t bytesread;
 
     // init digesting process, check if 1 because C is allergic to real booleans
     int digestprocess = EVP_DigestInit_ex(ctx, algo, NULL) == 1;
 
-    while (digestprocess && (read = fread(buffer, 1, sizeof buffer, file)) > 0) {
+    while (digestprocess && (bytesread = fread(buffer, 1, sizeof buffer, file)) > 0) {
         // update process for every buffer
-        digestprocess = EVP_DigestUpdate(ctx, buffer, read) == 1;
+        digestprocess = EVP_DigestUpdate(ctx, buffer, bytesread) == 1;
     }
 
     if (ferror(file)) {
@@ -101,12 +101,8 @@ int main(int argc, char *argv[]) {
     EVP_MD_CTX_free(ctx);
     fclose(file);
 
-    if (digestprocess) {
-        free(digestprocess);
-    }
-
     const char *final = tohex(digest, outlen);
-    if (final == NULL) {
+    if (final == NULL) {`
         printf("Something went horribly wrong");
         return 1;
     }
