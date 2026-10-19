@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     fclose(file);
 
     const char *final = tohex(digest, outlen);
-    if (final == NULL) {`
+    if (final == NULL) {
         printf("Something went horribly wrong");
         return 1;
     }
