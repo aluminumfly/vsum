@@ -9,6 +9,7 @@ char *tohex(const unsigned char *buf, size_t len) {
     char *str = malloc(len * 2 + 1);
     if (str == NULL) {
         printf("Failed to pre-allocate string");
+        return 1;
     }
 
     char *out = str;
