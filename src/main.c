@@ -8,7 +8,7 @@ char *tohex(const unsigned char *buf, size_t len) {
     // allocate expected result string length to memory
     char *str = malloc(len * 2 + 1);
     if (str == NULL) {
-        printf("Failed to pre-allocate string");
+        printf("Failed to pre-allocate string\n");
         return 1;
     }
 
@@ -44,7 +44,8 @@ int main(int argc, char *argv[]) {
     second arg = sha256 hash to compare
     */
     if (argc < 3) {
-        fprintf(stderr, "Usage: vsum [FILE] [SHA256-HASH]\n");
+        printf("Usage: vsum [FILE] [SHA256-HASH]\n");
+        return 1;
     }
 
     FILE *file = fopen(argv[1], "rb");
@@ -56,7 +57,7 @@ int main(int argc, char *argv[]) {
 
     char *sum = argv[2];
     if (strlen(sum) != 64) {
-        printf("Please enter a valid SHA256 hash");
+        printf("Please enter a valid SHA256 hash\n");
         return 1;
     }
 
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]) {
     const EVP_MD *algo = EVP_sha256();
 
     if (ctx == NULL) {
-        fprintf(stderr, "Failed to create digest context\n");
+        perror("Error creating digest context\n");
         fclose(file);
         return 1;
     }
@@ -78,27 +79,31 @@ int main(int argc, char *argv[]) {
 
     size_t read;
 
-    // init digesting status, check if 1 because C is allergic to real booleans
-    int status = EVP_DigestInit_ex(ctx, algo, NULL) == 1;
+    // init digesting process, check if 1 because C is allergic to real booleans
+    int digestprocess = EVP_DigestInit_ex(ctx, algo, NULL) == 1;
 
-    while (status && (read = fread(buffer, 1, sizeof buffer, file)) > 0) {
-        // update status for every buffer
-        status = EVP_DigestUpdate(ctx, buffer, read) == 1;
+    while (digestprocess && (read = fread(buffer, 1, sizeof buffer, file)) > 0) {
+        // update process for every buffer
+        digestprocess = EVP_DigestUpdate(ctx, buffer, read) == 1;
     }
 
     if (ferror(file)) {
-        fprintf(stderr, "File error, stop.");
+        perror("Error managing file\n");
         return 1;
     }
 
     // final digest action
-    if (status) {
-        status = EVP_DigestFinal_ex(ctx, digest, &outlen) == 1;
+    if (digestprocess) {
+        digestprocess = EVP_DigestFinal_ex(ctx, digest, &outlen) == 1;
     }
 
     // release digest context and file from memory
     EVP_MD_CTX_free(ctx);
     fclose(file);
+
+    if (digestprocess) {
+        free(digestprocess);
+    }
 
     const char *final = tohex(digest, outlen);
     if (final == NULL) {
