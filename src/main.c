@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-// convert binary to hash function
+// convert binary to hex function
 char *tohex(const unsigned char *buf, size_t len) {
     // allocate expected result string length to memory
     char *str = malloc(len * 2 + 1);
