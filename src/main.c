@@ -9,7 +9,7 @@ char *tohex(const unsigned char *buf, size_t len) {
     char *str = malloc(len * 2 + 1);
     if (str == NULL) {
         printf("Failed to pre-allocate string\n");
-        return 0;
+        return 1;
     }
 
     char *out = str;
@@ -26,12 +26,12 @@ char *tohex(const unsigned char *buf, size_t len) {
 // apparently tolower() cannot transform a full string
 int comparesum(const unsigned char *digest, const unsigned char *sum) {
     if (strlen(digest) != strlen(sum)) {
-        return 0;
+        return 1;
     }
 
     for (size_t i = 0; i < strlen(digest); i++) {
         if (tolower(digest[i]) != tolower(sum[i])) {
-            return 0;
+            return 1;
         }
     }
 
